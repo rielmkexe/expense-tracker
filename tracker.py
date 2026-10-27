@@ -1,25 +1,9 @@
-"""
-# Expense Tracker - Installment 4: The Tracker Makes Decisions
-# Made by: Kimberly L. Gabriel | Installment 4
-#
-# Description:
-# Advanced Python implementation for Laboratory 4. Evaluates individual expense
-# sizes, checks consecutive high expenses, computes total costs with tax,
-# and displays a dynamic budget verdict.
-"""
-
-from typing import Tuple
-
+# Project: Expense Tracker - Installment 5
+# Author: Kimberly L Gabriel
+# Description: Interactive expense tracker featuring a continuous menu loop, expense counting, running subtotal calculation, tax evaluation, and budget verdict checking.
 
 def classify_expense(amount: float) -> str:
-    """Classifies an expense amount into its corresponding size category.
-
-    Args:
-        amount (float): The cost of the expense.
-
-    Returns:
-        str: Formatted exact size message with two leading spaces.
-    """
+    """Classifies an expense amount into its size category with two leading spaces."""
     if amount > 200:
         return "  are you sure?\n  Huge expense."
     elif amount > 100:
@@ -31,18 +15,10 @@ def classify_expense(amount: float) -> str:
 
 
 def evaluate_budget_verdict(grand_total: float, budget: float) -> str:
-    """Evaluates the grand total against the budget and produces the exact verdict message.
-
-    Args:
-        grand_total (float): The calculated total cost including tax.
-        budget (float): The user's target budget limit.
-
-    Returns:
-        str: exact budget verdict message (never displaying a negative number).
-    """
+    """Evaluates the grand total against the budget and returns the verdict string."""
     if grand_total > budget:
-        over_budget_amount = grand_total - budget
-        return f"Over budget by ${over_budget_amount:.1f}!"
+        over_budget = grand_total - budget
+        return f"Over budget by ${over_budget:.1f}!"
     elif grand_total > (0.90 * budget):
         remaining = budget - grand_total
         return f"Careful: only ${remaining:.1f} left."
@@ -52,61 +28,66 @@ def evaluate_budget_verdict(grand_total: float, budget: float) -> str:
 
 
 def run_tracker() -> None:
-    """Executes the main Expense Tracker program sequence."""
-    # Main menu header display
-    print("EXPENSE TRACKER")
-    print("Know where your money goes.")
-    print("=========================")
-    print("MAIN MENU")
-    print("[1] Add an expense\n    (coming soon)")
-    print("[2] View all expenses\n    (coming soon)")
-    print("[3] Show total spent\n    (coming soon)")
-    print("[4] Exit\n    (coming soon)\n")
+    """Executes the main interactive menu-driven Expense Tracker application."""
+    # Banner printed once at start
+    banner_equal = "=" * 40
+    banner_dash = "-" * 40
 
-    # User identification
-    user_name = input("What's your name? ")
-    print(f"Welcome, {user_name}! Let's log two expenses.\n")
+    print(banner_equal)
+    print("\tEXPENSE TRACKER")
+    print("\tKnow where your money goes.")
+    print(banner_dash)
 
-    # Expense 1 Input & Classification
-    exp1_name = input("First expense? ")
-    exp1_amount = float(input("Amount? "))
-    print(classify_expense(exp1_amount))
-
-    # Expense 2 Input & Classification
-    exp2_name = input("Second expense? ")
-    exp2_amount = float(input("Amount? "))
-    print(classify_expense(exp2_amount))
-
-    # Check for consecutive big expenses (> 100)
-    if exp1_amount > 100 and exp2_amount > 100:
-        print("  slow down!\n  Two big expenses in a row")
-
-    # Tax & Budget Input
-    tax_rate = float(input("Tax rate %? "))
+    # Initial Setup - Asked exactly once
+    name = input("What's your name? ")
+    tax_percent = float(input("Tax rate %? "))
     budget = float(input("Your budget? "))
+    print(f"Welcome, {name}!\n")
 
-    # Financial Calculations
-    subtotal = exp1_amount + exp2_amount
-    average = subtotal / 2.0
-    tax_amount = subtotal * (tax_rate / 100.0)
-    grand_total = subtotal + tax_amount
+    # Tracking counters
+    subtotal = 0.0
+    count = 0
 
-    # Summary Display (Tab-aligned format matching specification)
-    print("\nSUMMARY")
-    print(f"{exp1_name}:\t\t| ${exp1_amount:.1f}")
-    print(f"{exp2_name}:\t\t| ${exp2_amount:.1f}")
-    print(f"Subtotal:\t| ${subtotal:.1f}")
-    print(f"Average:\t| ${average:.1f}")
-    print(f"Tax ({tax_rate:.1f}%):\t| ${tax_amount:.1f}")
-    print(f"Grand total:\t| ${grand_total:.1f}\n")
+    # Continuous Menu Loop
+    while True:
+        print("MAIN MENU")
+        print("[1] Add an expense")
+        print("[2] View all expenses (coming soon)")
+        print("[3] Show total spent")
+        print("[4] Exit")
 
-    # Verdict Line
-    verdict = evaluate_budget_verdict(grand_total, budget)
-    print(verdict)
-    print()
+        choice = input("Choose 1-4:")
 
-    # Footer
-    print("Made by: Kimberly L. Gabriel | Installment 4")
+        if choice == "1":
+            amount = float(input("Amount? "))
+            subtotal += amount
+            count += 1
+            print(classify_expense(amount))
+
+        elif choice == "2":
+            print("Coming soon: the tracker can't remember each item yet.")
+
+        elif choice == "3":
+            tax_amount = subtotal * (tax_percent / 100.0)
+            grand_total = subtotal + tax_amount
+
+            print(f"Expenses:\t| {count}")
+            print(f"Subtotal:\t| ${subtotal:.1f}")
+            print(f"Tax ({tax_percent:.1f}%):\t| ${tax_amount:.1f}")
+            print(f"Grand total:\t| ${grand_total:.1f}\n")
+
+            verdict = evaluate_budget_verdict(grand_total, budget)
+            print(verdict)
+
+        elif choice == "4":
+            print(f"Goodbye, {name}!")
+            print("Made by: Kimberly L Gabriel | Installment 5")
+            break
+
+        else:
+            print("Please choose 1, 2, 3 or 4.")
+
+        print()  # Spacer between iterations
 
 
 if __name__ == "__main__":
